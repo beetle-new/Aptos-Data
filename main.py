@@ -47,38 +47,39 @@ def get_data(owner_address):
     return df
 
 def get_data_txn(owner_address):
-query = """
-query MyQuery {
-  current_coin_balances(
-    where: {owner_address: {_eq: "%s"}}
-  ) {
-    owner_address
-    amount
-    coin_info {
-      symbol
+    query = """
+    query MyQuery {
+      current_coin_balances(
+        where: {owner_address: {_eq: "%s"}}
+      ) {
+        owner_address
+        amount
+        coin_info {
+          symbol
+        }
+      }
     }
-  }
-}
-""" % owner_address
+    """ % owner_address
 
-data = query_api(query)
-df = pd.DataFrame(data['data']['current_coin_balances'])
-df = df.rename(columns={"owner_address": "owner_address",
-                        "amount": "amount",
-                        "coin_info": "coin_info"})
-df = pd.concat([df.drop(['coin_info'], axis=1), df['coin_info'].apply(pd.Series)], axis=1)
+    data = query_api(query)
+    df = pd.DataFrame(data['data']['current_coin_balances'])
+    df = df.rename(columns={"owner_address": "owner_address",
+                            "amount": "amount",
+                            "coin_info": "coin_info"})
+    df = pd.concat([df.drop(['coin_info'], axis=1), df['coin_info'].apply(pd.Series)], axis=1)
 
-### NOT SURE WHY I HAVE TO DIVIDE BY THIS NUMBER TO GET THE CORRECT VALUE ####
-df['amount'] = round(df['amount'] / 100000000,2)
-df['amount'] = df['amount'].apply(lambda x: "{:,.2f}".format(x))
+    ### NOT SURE WHY I HAVE TO DIVIDE BY THIS NUMBER TO GET THE CORRECT VALUE ####
+    df['amount'] = round(df['amount'] / 100000000,2)
+    df['amount'] = df['amount'].apply(lambda x: "{:,.2f}".format(x))
 
 
-data = query_api(query)
-df2 = pd.DataFrame(data['data']['current_coin_balances'])
-df2 = df2.rename(columns={"owner_address": "owner_address",
-                        "amount": "amount",
-                        "coin_info": "coin_info"})
-df2 = pd.concat([df2.drop(['coin_info'], axis=1), df2['coin_info'].apply(pd.Series)], axis=1)
-df2['amount'] = round(df2['amount'] / 100000000, 2)
-df2['amount'] = df2['amount'].apply(lambda x: "{:,.2f}".format(x))
+    data = query_api(query)
+    df2 = pd.DataFrame(data['data']['current_coin_balances'])
+    df2 = df2.rename(columns={"owner_address": "owner_address",
+                            "amount": "amount",
+                            "coin_info": "coin_info"})
+    df2 = pd.concat([df2.drop(['coin_info'], axis=1), df2['coin_info'].apply(pd.Series)], axis=1)
+    df2['amount'] = round(df2['amount'] / 100000000, 2)
+    df2['amount'] = df2['amount'].apply(lambda x: "{:,.2f}".format(x))
+    return df2
 st.table(df2)

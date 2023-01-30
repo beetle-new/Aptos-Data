@@ -72,6 +72,7 @@ df['amount'] = df['amount'].apply(lambda x: "{:,.2f}".format(x))
 df['activity_type'] = df['activity_type'].str.split("::").str[-1]
 df['activity_type'] = df['activity_type'].str.rsplit("Event", 1).str[0]
 
+# Replace the fixed filter value with the user input
 owner_address = st.text_input("Enter the owner address: ")
 
 query = f"""
@@ -89,6 +90,9 @@ activity_type
 
 data = query_api(query)
 df = pd.DataFrame(data['data']['coin_activities'])
+df = df.rename(columns={"transaction_timestamp": "Date",
+"owner_address": "Address",
+"amount": "amount"})
 
 df['amount'] = round((df['amount'] / 100000000),2)
 df['amount'] = df['amount'].apply(lambda x: "{:,.2f}".format(x))

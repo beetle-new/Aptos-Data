@@ -23,12 +23,14 @@ owner_address = st.text_input("Enter an owner_address:", "0xc739507214d0e1bf9795
 query = f"""
 query MyQuery {{
   coin_activities(
-    where: {{owner_address: {{_eq: "{owner_address}"}}, is_transaction_success: {{_eq: true}}}}
+    where: {owner_address: {_eq: "0xc739507214d0e1bf9795485299d709e00024e92f7c0d055a4c2c39717882bdfd"}, is_transaction_success: {_eq: true}, activity_type: {_neq: "0x1::aptos_coin::GasFeeEvent"}}
+    order_by: {transaction_timestamp: desc}
   ) {{
     transaction_timestamp
     owner_address
     amount
     activity_type
+    coin_type
   }}
 }}
 """
@@ -41,6 +43,8 @@ df = df.rename(columns={"transaction_timestamp": "Date",
 
 df['amount'] = round((df['amount'] / 100000000),2)
 df['amount'] = df['amount'].apply(lambda x: "{:,.2f}".format(x))
+df['coin_type'] = df['coin_type'].str.split("::").str[-1]
+df['coin_type'] = df['coin_type'].str.rsplit("Event", 1).str[0]
 df['activity_type'] = df['activity_type'].str.split("::").str[-1]
 df['activity_type'] = df['activity_type'].str.rsplit("Event", 1).str[0]
 

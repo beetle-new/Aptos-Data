@@ -46,7 +46,7 @@ def get_data(owner_address):
     df['activity_type'] = df['activity_type'].str.rsplit("Event", 1).str[0]
     return df
 
-def get_data_txn(owner_address)
+def get_data_txn(owner_address):
 query = """
 query MyQuery {
   current_coin_balances(

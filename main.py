@@ -50,4 +50,4 @@ owner_address = "0xc739507214d0e1bf9795485299d709e00024e92f7c0d055a4c2c39717882b
 owner_address = st.text_input("Enter an owner address:", value=owner_address)
 if owner_address:
     df = get_data(owner_address)
-    st.write(df,width=800)
+    pd.DaataFrame(df)

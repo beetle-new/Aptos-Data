@@ -79,5 +79,6 @@ def get_data_txn(owner_address):
     df2['amount'] = round(df2['amount'] / 100000000, 2)
     df2['amount'] = df2['amount'].apply(lambda x: "{:,.2f}".format(x))
     return df2
-st.table(df)
-st.table(df2)
+if owner_address:
+    st.table(df)
+    st.table(df2)

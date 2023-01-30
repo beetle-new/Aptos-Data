@@ -35,10 +35,7 @@ query = """
 
 
 data = query_api(query)
-if 'data' in data and 'coin_activities' in data['data']:
-    df = pd.DataFrame(data['data']['coin_activities'])
-else:
-    raise ValueError("Key 'data' or 'coin_activities' not found in API response")
+df = pd.DataFrame(data['data']['coin_activities'])
 
     
 df['amount'] = round((df['amount'] / 100000000),2)

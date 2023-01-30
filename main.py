@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 import streamlit as st
 
+
 def query_api(query):
     url = "https://indexer.mainnet.aptoslabs.com/v1/graphql"
     headers = {
@@ -16,57 +17,36 @@ def query_api(query):
     else:
         return None
 
-owner_address = st.text_input("Enter an owner address:")
-query = f"""
-query MyQuery {{
-  coin_activities(
-     where: {{owner_address: {{_eq: "{owner_address}"}}, is_transaction_success: {{_eq: true}}, activity_type: {{_neq: "0x1::aptos_coin::GasFeeEvent"}}}}
-     order_by: {{transaction_timestamp: desc}}
-  ) {{
-    transaction_timestamp
-    amount
-    activity_type
-    coin_type
-  }}
-}}
-"""
 
-data = query_api(query)
-df = pd.DataFrame(data['data']['coin_activities'])
-df = df.rename(columns={"transaction_timestamp": "Date",
-                        "amount": "amount_all"})
-
-df['amount_all'] = round(df['amount_all'] / 100000000,2)
-df['amount_all'] = df['amount_all'].apply(lambda x: "{:,.2f}".format(x))
-df['coin_type'] = df['coin_type'].str.split("::").str[-1]
-df['coin_type'] = df['coin_type'].str.rsplit("Event", 1).str[0]
-df['activity_type'] = df['activity_type'].str.split("::").str[-1]
-df['activity_type'] = df['activity_type'].str.rsplit("Event", 1).str[0]
-st.write(df,width=800)
-
-query = f"""
-query MyQuery {{
-  current_coin_balances(
-    where: {{owner_address: {{_eq: "{owner_address}"}}}}
-  ) {{
-    owner_address
-    amount
-    coin_info {{
-      symbol
+def get_data(owner_address):
+    query = f"""
+    query MyQuery {{
+      coin_activities(
+         where: {{owner_address: {{_eq: "{owner_address}"}}, is_transaction_success: {{_eq: true}}, activity_type: {{_neq: "0x1::aptos_coin::GasFeeEvent"}}}}
+         order_by: {{transaction_timestamp: desc}}
+      ) {{
+        transaction_timestamp
+        amount
+        activity_type
+        coin_type
+      }}
     }}
-  }}
-}}
-"""
+    """
+    data = query_api(query)
+    df = pd.DataFrame(data['data']['coin_activities'])
+    df = df.rename(columns={"transaction_timestamp": "Date",
+                            "amount": "amount"})
 
-data = query_api(query)
-df = pd.DataFrame(data['data']['current_coin_balances'])
-df = df.rename(columns={"owner_address": "owner_address",
-                        "amount": "amount_new",
-                        "coin_info": "coin_info"})
-df = pd.concat([df.drop(['coin_info'], axis=1), df['coin_info'].apply(pd.Series)], axis=1)
+    df['amount'] = round(df['amount'] / 100000000,2)
+    df['amount'] = df['amount'].apply(lambda x: "{:,.2f}".format(x))
+    df['coin_type'] = df['coin_type'].str.split("::").str[-1]
+    df['coin_type'] = df['coin_type'].str.rsplit("Event", 1).str[0]
+    df['activity_type'] = df['activity_type'].str.split("::").str[-1]
+    df['activity_type'] = df['activity_type'].str.rsplit("Event", 1).str[0]
+    return df
 
-df['amount_new'] = round(df['amount_new'] / 100000000,2)
-df['amount_new'] = df['amount_new'].apply(lambda x: "{:,.2f}".format(x))
 
-st.write(df)
-
+owner_address = st.text_input("Enter the owner address:")
+if owner_address:
+    df = get_data(owner_address)
+    st.write(df,width=800)

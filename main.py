@@ -34,10 +34,10 @@ query MyQuery {{
 data = query_api(query)
 df = pd.DataFrame(data['data']['coin_activities'])
 df = df.rename(columns={"transaction_timestamp": "Date",
-                        "amount": "amount"})
+                        "amount": "amount_all"})
 
-df['amount'] = round(df['amount'] / 100000000,2)
-df['amount'] = df['amount'].apply(lambda x: "{:,.2f}".format(x))
+df['amount_all'] = round(df['amount_all'] / 100000000,2)
+df['amount_all'] = df['amount_all'].apply(lambda x: "{:,.2f}".format(x))
 df['coin_type'] = df['coin_type'].str.split("::").str[-1]
 df['coin_type'] = df['coin_type'].str.rsplit("Event", 1).str[0]
 df['activity_type'] = df['activity_type'].str.split("::").str[-1]

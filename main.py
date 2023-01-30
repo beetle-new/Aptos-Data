@@ -23,7 +23,8 @@ owner_address = st.text_input("Enter an owner_address:", "0xc739507214d0e1bf9795
 query = f"""
 query MyQuery {{
   coin_activities(
-    where: {owner_address: {_eq: "0xc739507214d0e1bf9795485299d709e00024e92f7c0d055a4c2c39717882bdfd"}, activity_type: {_neq: "0x1::aptos_coin::GasFeeEvent"}}
+    where: {owner_address: {_eq: "0xc739507214d0e1bf9795485299d709e00024e92f7c0d055a4c2c39717882bdfd"}
+# , activity_type: {_neq: "0x1::aptos_coin::GasFeeEvent"}}
     order_by: {transaction_timestamp: desc}
   ) {{
     transaction_timestamp

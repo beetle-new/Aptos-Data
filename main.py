@@ -46,5 +46,5 @@ df['coin_type'] = df['coin_type'].str.split("::").str[-1]
 df['coin_type'] = df['coin_type'].str.rsplit("Event", 1).str[0]
 df['activity_type'] = df['activity_type'].str.split("::").str[-1]
 df['activity_type'] = df['activity_type'].str.rsplit("Event", 1).str[0]
-st.write(df)
+st.write(df,width=800)
 

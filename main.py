@@ -45,9 +45,39 @@ def get_data(owner_address):
     df['activity_type'] = df['activity_type'].str.rsplit("Event", 1).str[0]
     return df
 
+def get_balance_data(owner_address):
+    query = f"""
+    query MyQuery {{
+      current_coin_balances(
+        where: {{owner_address: {{_eq: "{owner_address}"}}}}
+      ) {{
+        owner_address
+        amount
+        coin_info {{
+          symbol
+        }}
+      }}
+    }}
+    """
+    data = query_api(query)
+    df = pd.DataFrame(data['data']['current_coin_balances'])
+    df = df.rename(columns={"owner_address": "owner_address",
+                            "amount": "amount",
+                            "coin_info": "coin_info"})
+    df = pd.concat([df.drop(['coin_info'], axis=1), df['coin_info'].apply(pd.Series)], axis=1)
+    df['amount'] = round(df['amount'] / 100000000,2)
+    df['amount'] = df['amount'].apply(lambda x: "{:,.2f}".format(x))
 
-owner_address = "0xc739507214d0e1bf9795485299d709e00024e92f7c0d055a4c2c39717882bdfd"
-owner_address = st.text_input("Enter an owner address:", value=owner_address)
 if owner_address:
-    df = get_data(owner_address)
-    st.table(df)
+df = get_data(owner_address)
+st.table(df)
+
+data = query_api(query)
+df2 = pd.DataFrame(data['data']['current_coin_balances'])
+df2 = df2.rename(columns={"owner_address": "owner_address",
+                        "amount": "amount",
+                        "coin_info": "coin_info"})
+df2 = pd.concat([df2.drop(['coin_info'], axis=1), df2['coin_info'].apply(pd.Series)], axis=1)
+df2['amount'] = round(df2['amount'] / 100000000, 2)
+df2['amount'] = df2['amount'].apply(lambda x: "{:,.2f}".format(x))
+st.table(df2)

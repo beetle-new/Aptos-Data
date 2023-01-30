@@ -22,33 +22,6 @@ owner_address = st.text_input("Enter an owner_address:", "0xc739507214d0e1bf9795
 # Replace the fixed filter value with the user input
 query = f"""
 query MyQuery {{
-  current_coin_balances(
-    where: {{owner_address: {{_eq: "{owner_address}"}}}}
-  ) {{
-    owner_address
-    amount
-    coin_info {{
-      symbol
-    }}
-  }}
-}}
-"""
-
-data = query_api(query)
-df = pd.DataFrame(data['data']['current_coin_balances'])
-df = df.rename(columns={"owner_address": "owner_address",
-                        "amount": "amount",
-                        "coin_info": "coin_info"})
-df = pd.concat([df.drop(['coin_info'], axis=1), df['coin_info'].apply(pd.Series)], axis=1)
-
-### NOT SURE WHY I HAVE TO DIVIDE BY THIS NUMBER TO GET THE CORRECT VALUE ####
-df['amount'] = round(df['amount'] / 100000000,2)
-df['amount'] = df['amount'].apply(lambda x: "{:,.2f}".format(x))
-st.write(df)
-
-# Replace the fixed filter value with the user input
-query = f"""
-query MyQuery {{
   coin_activities(
     where: {{owner_address: {{_eq: "{owner_address}"}}, is_transaction_success: {{_eq: true}}}}
   ) {{

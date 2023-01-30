@@ -69,8 +69,8 @@ def get_balance_data(owner_address):
     df['amount'] = df['amount'].apply(lambda x: "{:,.2f}".format(x))
 
 if owner_address:
-df = get_data(owner_address)
-st.table(df)
+    df = get_data(owner_address)
+    st.table(df)
 
 data = query_api(query)
 df2 = pd.DataFrame(data['data']['current_coin_balances'])

@@ -75,6 +75,8 @@ if owner_address:
 
 if owner_address:
     st.table(df)
+    st.table(get_data(owner_address))
+
 
 
 data = query_api(query)

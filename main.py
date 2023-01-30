@@ -68,11 +68,8 @@ def get_data_txn(owner_address):
                             "coin_info": "coin_info"})
     df = pd.concat([df.drop(['coin_info'], axis=1), df['coin_info'].apply(pd.Series)], axis=1)
 
-    ### NOT SURE WHY I HAVE TO DIVIDE BY THIS NUMBER TO GET THE CORRECT VALUE ####
     df['amount'] = round(df['amount'] / 100000000,2)
     df['amount'] = df['amount'].apply(lambda x: "{:,.2f}".format(x))
-
-
     data = query_api(query)
     df2 = pd.DataFrame(data['data']['current_coin_balances'])
     df2 = df2.rename(columns={"owner_address": "owner_address",
@@ -82,4 +79,5 @@ def get_data_txn(owner_address):
     df2['amount'] = round(df2['amount'] / 100000000, 2)
     df2['amount'] = df2['amount'].apply(lambda x: "{:,.2f}".format(x))
     return df2
+st.table(df)
 st.table(df2)

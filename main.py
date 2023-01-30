@@ -22,7 +22,6 @@ query = f"""
 query MyQuery {{
   coin_activities(
     where: {{owner_address: {{_eq: "{owner_address}"}}, is_transaction_success: {{_eq: true}}}}
-    order_by: {transaction_timestamp: desc}
   ) {{
     transaction_timestamp
   #  owner_address
@@ -42,5 +41,5 @@ df['coin_type'] = df['coin_type'].str.split("::").str[-1]
 df['coin_type'] = df['coin_type'].str.rsplit("Event", 1).str[0]
 df['activity_type'] = df['activity_type'].str.split("::").str[-1]
 df['activity_type'] = df['activity_type'].str.rsplit("Event", 1).str[0]
-
+df = df.sort_values(by='transaction_timestamp', ascending=False)
 st.write(df, width=800)

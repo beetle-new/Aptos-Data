@@ -61,11 +61,12 @@ query MyQuery {{
 data = query_api(query)
 df = pd.DataFrame(data['data']['current_coin_balances'])
 df = df.rename(columns={"owner_address": "owner_address",
-                        "amount": "amount",
+                        "amount": "amount_new",
                         "coin_info": "coin_info"})
 df = pd.concat([df.drop(['coin_info'], axis=1), df['coin_info'].apply(pd.Series)], axis=1)
 
-df['amount'] = round(df['amount'] / 100000000,2)
-df['amount'] = df['amount'].apply(lambda x: "{:,.2f}".format(x))
+df['amount_new'] = round(df['amount_new'] / 100000000,2)
+df['amount_new'] = df['amount_new'].apply(lambda x: "{:,.2f}".format(x))
+
 st.write(df)
 

@@ -46,6 +46,7 @@ def get_data(owner_address):
     df['activity_type'] = df['activity_type'].str.rsplit("Event", 1).str[0]
     return df
 
+def get_data_txn(owner_address)
 query = """
 query MyQuery {
   current_coin_balances(
@@ -80,6 +81,4 @@ df2 = df2.rename(columns={"owner_address": "owner_address",
 df2 = pd.concat([df2.drop(['coin_info'], axis=1), df2['coin_info'].apply(pd.Series)], axis=1)
 df2['amount'] = round(df2['amount'] / 100000000, 2)
 df2['amount'] = df2['amount'].apply(lambda x: "{:,.2f}".format(x))
-if owner_address:
-    st.table(df)
-    st.table(df2)
+st.table(df2)

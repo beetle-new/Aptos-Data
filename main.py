@@ -35,8 +35,9 @@ query = """
 
 
 data = query_api(query)
-df = pd.DataFrame(['data']['coin_activities'])
-
+if 'data' in data and 'coin_activities' in data['data']:
+    df = pd.DataFrame(data['data']['coin_activities'])
+    
 df['amount'] = round((df['amount'] / 100000000),2)
 df['amount'] = df['amount'].apply(lambda x: "{:,.2f}".format(x))
 df['coin_type'] = df['coin_type'].str.split("::").str[-1]

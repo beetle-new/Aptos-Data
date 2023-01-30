@@ -53,7 +53,6 @@ query MyQuery {
   current_coin_balances(
     where: {owner_address: {_eq: "%s"}}
   ) {
-    owner_address
     amount
     coin_info {
       symbol
@@ -65,8 +64,7 @@ query MyQuery {
 if owner_address:
     data = query_api(query)
     df = pd.DataFrame(data['data']['current_coin_balances'])
-    df = df.rename(columns={"owner_address": "owner_address",
-                            "amount": "amount",
+    df = df.rename(columns={"amount": "amount",
                             "coin_info": "coin_info"})
     df = pd.concat([df.drop(['coin_info'], axis=1),df['coin_info'].apply(pd.Series)], axis=1)
     ### NOT SURE WHY I HAVE TO DIVIDE BY THIS NUMBER TO GET THE CORRECT VALUE ####

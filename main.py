@@ -18,18 +18,19 @@ def query_api(query):
 
 owner_address = st.text_input("Enter an owner_address:", "0xc739507214d0e1bf9795485299d709e00024e92f7c0d055a4c2c39717882bdfd")
 
-query = f"""
-query MyQuery {{
-  coin_activities(
-    where: {{owner_address: {{_eq: "{owner_address}"}}, is_transaction_success: {{_eq: true}}, activity_type: {{_neq: "0x1::aptos_coin::GasFeeEvent"}}}}
-  ) {{
-    transaction_timestamp
-  #  owner_address
-    amount
-    activity_type
-    coin_type
-  }}
-}}
+query = """
+  MyQuery {
+    coin_activities(
+      where: {owner_address: {_eq: """ + f'"{owner_address}"' + """}, is_transaction_success: {_eq: true}, activity_type: {_neq: "0x1::aptos_coin::GasFeeEvent"}}
+      order_by: {transaction_timestamp: desc}
+    ) {
+      transaction_timestamp
+      owner_address
+      amount
+      activity_type
+      coin_type
+    }
+  }
 """
 
 

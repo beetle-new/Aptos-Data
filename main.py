@@ -24,7 +24,7 @@ query MyQuery {{
     where: {{owner_address: {{_eq: "{owner_address}"}}, is_transaction_success: {{_eq: true}}}}
   ) {{
     transaction_timestamp
-    owner_address
+  #  owner_address
     amount
     activity_type
     coin_type

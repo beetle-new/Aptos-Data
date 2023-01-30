@@ -35,7 +35,7 @@ query = """
 
 
 data = query_api(query)
-df = pd.DataFrame(data['data']['coin_activities'])
+df = pd.DataFrame(['data']['coin_activities'])
 
 df['amount'] = round((df['amount'] / 100000000),2)
 df['amount'] = df['amount'].apply(lambda x: "{:,.2f}".format(x))

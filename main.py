@@ -24,7 +24,6 @@ query MyQuery {
     order_by: {transaction_timestamp: desc}
   ) {
     transaction_timestamp
-    owner_address
     amount
     activity_type
     coin_type
@@ -37,7 +36,6 @@ query MyQuery {
 data = query_api(query)
 df = pd.DataFrame(data['data']['coin_activities'])
 df = df.rename(columns={"transaction_timestamp": "Date",
-                        "owner_address": "Address",
                         "amount": "amount"})
 
 df['amount'] = round(df['amount'] / 100000000,2)

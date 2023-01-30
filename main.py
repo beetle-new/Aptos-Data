@@ -35,9 +35,6 @@ query MyQuery {{
 
 data = query_api(query)
 df = pd.DataFrame(data['data']['coin_activities'])
-df = df.rename(columns={"transaction_timestamp": "Date",
-                        "owner_address": "Address",
-                        "amount": "amount"})
 
 df['amount'] = round((df['amount'] / 100000000),2)
 df['amount'] = df['amount'].apply(lambda x: "{:,.2f}".format(x))

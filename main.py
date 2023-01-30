@@ -91,10 +91,10 @@ data = query_api(query)
 df = pd.DataFrame(data['data']['coin_activities'])
 df = df.rename(columns={"transaction_timestamp": "Date",
 "owner_address": "Address",
-"amount": "amount"})
+"amount": "txn_amount"})
 
-df['amount'] = round((df['amount'] / 100000000),2)
-df['amount'] = df['amount'].apply(lambda x: "{:,.2f}".format(x))
+df['txn_amount'] = round((df['txn_amount'] / 100000000),2)
+df['txn_amount'] = df['txn_amount'].apply(lambda x: "{:,.2f}".format(x))
 df['activity_type'] = df['activity_type'].str.split("::").str[-1]
 df['activity_type'] = df['activity_type'].str.rsplit("Event", 1).str[0]
 st.table(df)

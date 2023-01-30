@@ -33,7 +33,7 @@ query MyQuery {{
     activity_type
     coin_type
   }}
-}}
+}
 """
 
 data = query_api(query)

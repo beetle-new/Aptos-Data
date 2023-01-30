@@ -85,4 +85,5 @@ df2 = df2.rename(columns={"owner_address": "owner_address",
 df2 = pd.concat([df2.drop(['coin_info'], axis=1), df2['coin_info'].apply(pd.Series)], axis=1)
 df2['amount'] = round(df2['amount'] / 100000000, 2)
 df2['amount'] = df2['amount'].apply(lambda x: "{:,.2f}".format(x))
-st.table(df2)
+if owner_address:
+    st.table(df2)

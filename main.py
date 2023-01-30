@@ -23,7 +23,7 @@ def get_data(owner_address):
     query = f"""
     query MyQuery {{
       coin_activities(
-         where: {{owner_address: {_eq: "%s"}}, is_transaction_success: {{_eq: true}}, activity_type: {{_neq: "0x1::aptos_coin::GasFeeEvent"}}}}
+         where: {{owner_address: {_eq: "%s"}}}, is_transaction_success: {{_eq: true}}, activity_type: {{_neq: "0x1::aptos_coin::GasFeeEvent"}}}}
          order_by: {{transaction_timestamp: desc}}
       ) {{
         transaction_timestamp

@@ -43,7 +43,9 @@ def get_data(owner_address):
     df['coin_type'] = df['coin_type'].str.rsplit("Event", 1).str[0]
     df['activity_type'] = df['activity_type'].str.split("::").str[-1]
     df['activity_type'] = df['activity_type'].str.rsplit("Event", 1).str[0]
-    return df
+    
+    activity_types = df['activity_type'].nunique()
+    st.write("Total distinct activity types: ", activity_types)    return df
 
 owner_address = "0xc739507214d0e1bf9795485299d709e00024e92f7c0d055a4c2c39717882bdfd"
 owner_address = st.text_input("Enter an owner address:", value=owner_address)
@@ -86,3 +88,4 @@ df2 = pd.concat([df2.drop(['coin_info'], axis=1), df2['coin_info'].apply(pd.Seri
 df2['amount'] = round(df2['amount'] / 100000000, 2)
 df2['amount'] = df2['amount'].apply(lambda x: "{:,.2f}".format(x))
 st.table(df2)
+

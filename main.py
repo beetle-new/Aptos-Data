@@ -82,7 +82,31 @@ if owner_address:
     st.table(df)
     st.table(get_data(owner_address))
 
-
+def get_data(owner_address):
+    query = f"""
+    query MyQuery {{
+      coin_activities(
+         where: {{owner_address: {{_eq: "{owner_address}"}}, is_transaction_success: {{_eq: true}}, activity_type: {{_neq: "0x1::aptos_coin::GasFeeEvent"}}}}
+         order_by: {{transaction_timestamp: desc}}
+      ) {{
+        transaction_timestamp
+        amount
+        activity_type
+        coin_type
+      }}
+    }}
+    """
+    data = query_api(query)
+    df = pd.DataFrame(data['data']['coin_activities'])
+    df = df.rename(columns={"transaction_timestamp": "Date",
+                            "amount": "amount"})
+    df['amount'] = round(df['amount'] / 100000000,2)
+    df['amount'] = df['amount'].apply(lambda x: "{:,.2f}".format(x))
+    df['coin_type'] = df['coin_type'].str.split("::").str[-1]
+    df['coin_type'] = df['coin_type'].str.rsplit("Event", 1).str[0]
+    df['activity_type'] = df['activity_type'].str.split("::").str[-1]
+    df['activity_type'] = df['activity_type'].str.rsplit("Event", 1).str[0]
+    return df
 
 data = query_api(query)
 df2 = pd.DataFrame(data['data']['current_coin_balances'])

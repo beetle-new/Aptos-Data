@@ -45,7 +45,8 @@ def get_data(owner_address):
     df['activity_type'] = df['activity_type'].str.rsplit("Event", 1).str[0]
     
     activity_types = df['activity_type'].nunique()
-    st.write("Total distinct activity types: ", activity_types)    return df
+    st.write("Total distinct activity types: ", activity_types)
+    return df
 
 owner_address = "0xc739507214d0e1bf9795485299d709e00024e92f7c0d055a4c2c39717882bdfd"
 owner_address = st.text_input("Enter an owner address:", value=owner_address)

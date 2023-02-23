@@ -38,7 +38,8 @@ def get_data(owner_address):
     """
     data = query_api(query)
     df = pd.DataFrame(data['data']['coin_activities'])
-    df['activity_type'] = df['activity_type'].str.split("::").str[-1].rsplit("Event", 1)[0]
+    df['activity_type'] = df['activity_type'].str.split("::").str[-1]
+    df['activity_type'] = df['activity_type'].apply(lambda x: x.rsplit("Event", 1)[0] if x is not None else x)
     
     activity_types = df['activity_type'].value_counts().rename_axis('activity_type').reset_index(name='count')
     st.write(activity_types)
@@ -49,6 +50,7 @@ def get_data(owner_address):
     df['coin_type'] = df['coin_type'].str.split("::").str[-1].rsplit("Event", 1)[0]
     
     return df
+
 
 
 owner_address = "0xc739507214d0e1bf9795485299d709e00024e92f7c0d055a4c2c39717882bdfd"
